@@ -28,9 +28,13 @@ module.exports = function(environment/*, appConfig */) {
 
 ## User tracking
 
-Personally identifiable info (PII) should never be sent to Raygun, without express legal approval.
+Personally identifiable info (PII) should never be sent to Raygun, without
+legal approval.
 
-The `enableUserTracking` setting will disable the Raygun anonymous tracking and utilize the Q2AO user id values to track users.
+The `enableUserTracking` setting will disable the Raygun anonymous tracking
+and utilize a custom user id value (uuid) to track users. When using this
+update the user id once your user logs into your application. The `raygun`
+service provides a `setUser` method.
 
 ## Installation
 
@@ -38,7 +42,7 @@ The `enableUserTracking` setting will disable the Raygun anonymous tracking and 
 
 ## Running Tests
 
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
+* `npm test` (Runs `ember try:each` to test multiple Ember versions)
 * `ember test`
 * `ember test --server`
 

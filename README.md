@@ -5,6 +5,8 @@ A Raygun.io integration via an addon. Uses v2 of the Raygun JS API, `rg4js`.
 - See <https://github.com/MindscapeHQ/raygun4js#getting-started>
 - Loads Raygun JavaScript asset from: `//cdn.raygun.io/raygun4js/raygun.min.js`
 
+[![Build Status](https://travis-ci.org/q2ebanking/ember-raygun.svg?branch=master)](https://travis-ci.org/q2ebanking/ember-raygun)
+
 To enable and set your API Key add to config/environment:
 
 ```js

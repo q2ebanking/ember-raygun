@@ -9,13 +9,16 @@
     "pulse",
     "real user monitoring"
   ],
-  "license": "MIT",
-  "author": "",
+  "license": "Apache-2.0",
+  "author": "Bill Heaton <pixelhandler@gmail.com>",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/q2ebanking/ember-raygun.git"
+  },
   "scripts": {
     "build": "ember build",
     "start": "ember server",

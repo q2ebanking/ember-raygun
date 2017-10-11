@@ -7,7 +7,10 @@ export default Service.extend({
 
   login(/*credentials*/) {
     // force an error to test Raygun crash reporting
-    throw 'oops testing raygun error';
+    // throw 'oops testing raygun error';
+    let error = new Error('Error: API failure');
+    error.xhr = { status: 409 };
+    throw error;
     // example login request, on sucess set the raygun user id
     /*
     let options = { method: 'POST', body: credentials };

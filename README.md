@@ -60,6 +60,41 @@ The config for a development build uses environment variables.
 
 On Windows you can use PowerShell to set an environment variable, `$env:RAYGUN_ENABLED="true"`
 
+To prevent certain errors from Raygun Crash Reporting, use a utility function
+in your app named `raygun-error-filter`.
+
+- `ember generate util raygun-error-filter`
+
+Perhaps your app handles RSVP errors caught from XHR requests, based status codes,
+`401`, `403`, and `409`. And the related errors shoud not be reported to Raygun.
+
+Below is an example utility function that you may use as a filter.
+
+```js
+export default function raygunErrorFilter(error) {
+  if (error && error.xhr && error.xhr.status && [401,403,409].includes(error.xhr.status)) {
+    return null;
+  } else {
+    return error;
+  }
+}
+```
+
+If the utility function returns the error passed in, then it will be reported.
+ 
+See the dummy app example, [utils/raygun-error-filter](tests/dummy/app/utils/raygun-error-filter.js).
+
+Crash reporting is generated through `Ember.onerror`, `RSVP.on('error', () => {})`,
+and `Ember.Logger.error`. When your application's config enables Raygun
+Crash reporting, this behavior is setup using an instance initializer.
+
+If you would like to define how your app reports runtime errors to Raygun,
+then you may generate your own instance initializer.
+
+- `ember generate instance-initializer raygun`
+
+See [addon/instance-initializers/raygun](addon/instance-initializers/raygun).
+
 ## Installation
 
 * `ember install ember-raygun`

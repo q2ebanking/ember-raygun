@@ -16,11 +16,13 @@ module('Unit | Instance Initializer | raygun', {
     setupRg4jsStub.call(this);
     setupFilter.call(this);
     Ember.onerror = undefined;
+    this.ogOnerror = window.onerror;
     adapterException = Ember.Test.adapter.exception;
     Ember.Test.adapter.exception = () => null;
   },
   afterEach() {
     Ember.Test.adapter.exception = adapterException;
+    window.onerror = this.ogOnerror;
     Ember.onerror = undefined;
     teardownRg4jsStub.call(this);
     teardownFilter.call(this);
@@ -29,12 +31,33 @@ module('Unit | Instance Initializer | raygun', {
   }
 });
 
+test('it sets up raygun error handling with a filter to use window.onerror', function(assert) {
+  enableRaygun.call(this);
+
+  initialize(this.appInstance);
+  // sinon cannot spy/stub window.onerror
+  const currentOnerror = window.onerror;
+  let onErrorSpyCalled = false;
+  window.onerror = (err) => {
+    onErrorSpyCalled = true;
+    currentOnerror(err);
+  };
+  const error = new Error('window.onerror test');
+  window.onerror(error);
+  assert.ok(onErrorSpyCalled);
+  assert.ok(this.filterSpy.calledOnce);
+  assert.ok(this.rg4jsStub.calledOnce);
+  assert.ok(this.rg4jsStub.calledWith('send'));
+  assert.equal(this.rg4jsStub.firstCall.args[1].error, error);
+  window.onerror = currentOnerror;
+});
+
 test('it sets up raygun error handling with a filter to use Ember.onerror', function(assert) {
   enableRaygun.call(this);
 
   initialize(this.appInstance);
 
-  const error = new Error('onerror test');
+  const error = new Error('Ember.onerror test');
   Ember.onerror(error);
   assert.ok(this.filterSpy.calledOnce);
   assert.ok(this.rg4jsStub.calledOnce);
@@ -119,11 +142,12 @@ test('when disabled RSVP.reject does not send error to raygun', function(assert)
   });
 });
 
-function enableRaygun(enabled = true) {
+function enableRaygun(enabled = true, autoWindowOnerror = false) {
   this.appInstance.register('config:environment', {
     raygun: {
       enabled: enabled,
       apiKey: 'secret',
+      enableCrashReporting: autoWindowOnerror
     }
   });
 }
@@ -145,3 +169,4 @@ function teardownRg4jsStub() {
   this.rg4jsStub.restore();
   delete this.rg4jsStub;
 }
+

@@ -87,7 +87,8 @@ would use Raygun's automatic setup for `winodow.onerror`, which doesn't filter.
  
 See the dummy app example, [utils/raygun-error-filter](tests/dummy/app/utils/raygun-error-filter.js).
 
-Crash reporting is generated through `Ember.onerror`, `RSVP.on('error', () => {})`, `Ember.Logger.error`, and `window.onerror`. When your application's config enables
+Crash reporting is generated through `Ember.onerror`, `RSVP.on('error', () => {})`, 
+`Ember.Logger.error`, and `window.onerror`. When your application's config enables
 Raygun Crash reporting, this behavior is setup using an instance initializer.
 
 If you would like to define how your app reports runtime errors to Raygun,

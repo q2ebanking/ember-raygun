@@ -12,6 +12,9 @@ export function initialize(appInstance) {
     setupEmberOnError(filter);
     setupRSVPOnError(filter);
     setupErrorLogger(filter);
+    if (!isTruthy(config.raygun.enableCrashReporting)) {
+      setupWindowOnError(filter);
+    }
   }
 }
 
@@ -22,6 +25,16 @@ export default {
 
 function isEnabled(config) {
   return config && config.apiKey && isTruthy(config.enabled);
+}
+
+function setupWindowOnError(filter) {
+  let handler = 'window.onerror';
+  // See https://github.com/MindscapeHQ/raygun4js#usage
+  window.onerror = function(error) {
+    if (filter(error)) {
+      sendToRayGun(error, handler);
+    }
+  }
 }
 
 function setupEmberOnError(filter) {

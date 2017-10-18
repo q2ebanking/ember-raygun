@@ -17,7 +17,7 @@ module.exports = function(environment/*, appConfig */) {
     raygun: {
       apiKey: 'APP_API_KEY_HERE',
       enabled: true,
-      enableCrashReporting: true,
+      enableCrashReporting: false,
       enableUserTracking: true,
       enablePulse: true,
       saveIfOffline: true,
@@ -55,7 +55,7 @@ user id, with anonymous id or an actual user id provided after login.
 
 The config for a development build uses environment variables.
 
-- `export RAYGUN_ENABLED=true; export RAYGUN_CRASH_REPORTING=true; export RAYGUN_USER_TRACKING=true; export RAYGUN_API_KEY='X'; ember s`
+- `export RAYGUN_ENABLED=true; export RAYGUN_CRASH_REPORTING=false; export RAYGUN_USER_TRACKING=true; export RAYGUN_API_KEY='X'; ember s`
 - visit <http://localhost:4200/login>
 
 On Windows you can use PowerShell to set an environment variable, `$env:RAYGUN_ENABLED="true"`
@@ -81,12 +81,15 @@ export default function raygunErrorFilter(error) {
 ```
 
 If the utility function returns the error passed in, then it will be reported.
+To ensure the filter function is used with `window.onerror` (uncaught errors)
+set the config value for `enableCrashReporting` to `false`. A `true` setting
+would use Raygun's automatic setup for `winodow.onerror`, which doesn't filter.
  
 See the dummy app example, [utils/raygun-error-filter](tests/dummy/app/utils/raygun-error-filter.js).
 
-Crash reporting is generated through `Ember.onerror`, `RSVP.on('error', () => {})`,
-and `Ember.Logger.error`. When your application's config enables Raygun
-Crash reporting, this behavior is setup using an instance initializer.
+Crash reporting is generated through `Ember.onerror`, `RSVP.on('error', () => {})`, 
+`Ember.Logger.error`, and `window.onerror`. When your application's config enables
+Raygun Crash reporting, this behavior is setup using an instance initializer.
 
 If you would like to define how your app reports runtime errors to Raygun,
 then you may generate your own instance initializer.

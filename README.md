@@ -1,3 +1,5 @@
+# THIS PROJECT IS ARCHIVED AND NO LONGER MAINTAINED
+
 # ember-raygun
 
 A Raygun.io integration via an addon. Uses v2 of the Raygun JS API, `rg4js`.
